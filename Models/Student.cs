@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace StudentExercises5.Models
+{
+    class Student : NSSPerson
+    {
+        public List<Exercise> Exercises { get; set; }
+
+        public Student(string firstName, string lastName, string slackHandle, Cohort cohort)
+        {
+            Exercises = new List<Exercise>();
+            FirstName = firstName;
+            LastName = lastName;
+            SlackHandle = slackHandle;
+            Cohort = cohort;
+        }
+    }
+}
