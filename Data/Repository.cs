@@ -57,7 +57,7 @@ namespace StudentExercises5.Data
             }
         }
 
-        //Find all the exercises in the database where the language is JavaScript.
+        ///<summary>Final all the exercises in the database by language</summary>
         public List<Exercise> GetExercisesByLanguage(string language)
         {
             using (SqlConnection conn = Connection)
@@ -87,35 +87,99 @@ namespace StudentExercises5.Data
             }
         }
 
-        // Example from DepartmentsEmployees
+        ///<summary>Adds an exercise to the database</summary>
+        public void AddExercise(Exercise exercise)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Exercise (Name, Language) VALUES (@name, @language)";
+                    cmd.Parameters.Add(new SqlParameter("@name", exercise.Name));
+                    cmd.Parameters.Add(new SqlParameter("@language", exercise.Language));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-        //public List<Employee> GetAllEmployees()
+        // ******************************
+        // Instructor
+        // ******************************
+
+        /// <summary>Gets all instructors from the database, including their Cohort</summary>
+        public List<Instructor> GetAllInstructors()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT i.Id, i.FirstName, i.LastName, i.CohortId, i.SlackHandle, i.Specialty, c.Name" +
+                        "              FROM Instructor i LEFT JOIN Cohort c on i.CohortId = c.Id";
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Instructor> instructors = new List<Instructor>();
+                    while (reader.Read())
+                    {
+                        Instructor instructor = new Instructor(
+                            reader.GetInt32(reader.GetOrdinal("Id")),
+                            reader.GetString(reader.GetOrdinal("FirstName")),
+                            reader.GetString(reader.GetOrdinal("LastName")),
+                            reader.GetString(reader.GetOrdinal("SlackHandle")),
+                            new Cohort(reader.GetInt32(reader.GetOrdinal("CohortId")),
+                                        reader.GetString(reader.GetOrdinal("Name"))),
+                            reader.GetString(reader.GetOrdinal("Specialty")));
+
+                        instructors.Add(instructor);
+                    }
+
+                    reader.Close();
+
+                    return instructors;
+                }
+            }
+        }
+
+
+        ///<summary>Adds an instructor to the database</summary>
+        public void AddInstructor(Instructor instructor)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Instructor (FirstName, LastName, CohortId, Specialty, SlackHandle)" +
+                        "              VALUES (@firstName, @lastName, @cohortId, @specialty, @slackHandle)";
+                    cmd.Parameters.Add(new SqlParameter("@firstName", instructor.FirstName));
+                    cmd.Parameters.Add(new SqlParameter("@lastName", instructor.LastName));
+                    cmd.Parameters.Add(new SqlParameter("@cohortId", instructor.Cohort.Id));
+                    cmd.Parameters.Add(new SqlParameter("@specialty", instructor.Specialty));
+                    cmd.Parameters.Add(new SqlParameter("slackHandle", instructor.SlackHandle));
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>Assigns an existing exercise to an existing student</summary>
+        public void AssignExercise(Exercise exercise, Student student)
+        {
+
+        }
+
+        //public void AddExercise(Exercise exercise)
         //{
         //    using (SqlConnection conn = Connection)
         //    {
         //        conn.Open();
         //        using (SqlCommand cmd = conn.CreateCommand())
         //        {
-        //            cmd.CommandText = "SELECT Id, FirstName, LastName FROM Employee";
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            Employee employee = null;
-        //            List<Employee> employees = new List<Employee>();
-        //            while (reader.Read())
-        //            {
-        //                employee = new Employee
-        //                {
-        //                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                    FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                    LastName = reader.GetString(reader.GetOrdinal("LastName"))
-        //                };
-
-        //                employees.Add(employee);
-        //            }
-
-        //            reader.Close();
-
-        //            return employees;
+        //            cmd.CommandText = "INSERT INTO Exercise (Name, Language) VALUES (@name, @language)";
+        //            cmd.Parameters.Add(new SqlParameter("@name", exercise.Name));
+        //            cmd.Parameters.Add(new SqlParameter("@language", exercise.Language));
+        //            cmd.ExecuteNonQuery();
         //        }
         //    }
         //}

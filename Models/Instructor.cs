@@ -8,10 +8,12 @@ namespace StudentExercises5.Models
     {
         // Properties
         public string Specialty { get; set; }
+        public int Id { get; set; }
 
         // Constructor
-        public Instructor(string firstName, string lastName, string slackHandle, Cohort cohort, string specialty)
+        public Instructor(int id, string firstName, string lastName, string slackHandle, Cohort cohort, string specialty)
         {
+            Id = id;
             FirstName = firstName;
             LastName = lastName;
             SlackHandle = slackHandle;
