@@ -22,7 +22,7 @@ namespace StudentExercises5
             // Find all the exercises in the database where the language is JavaScript.
             List<Exercise> javascriptExercises = repository.GetExercisesByLanguage("JavaScript");
 
-            foreach(Exercise exercise in javascriptExercises)
+            foreach (Exercise exercise in javascriptExercises)
             {
                 //Console.WriteLine($"{exercise.Id}: Name: {exercise.Name} Language: {exercise.Language}");
             }
@@ -62,6 +62,10 @@ namespace StudentExercises5
                 Console.WriteLine($"Cohort: {instructor.Cohort.Name}");
                 Console.WriteLine();
             }
+
+            // Assign an existing exercise to an existing student
+            repository.AssignExercise(1, 5);
+
 
 
 

@@ -132,6 +132,7 @@ namespace StudentExercises5.Data
                             reader.GetString(reader.GetOrdinal("Specialty")));
 
                         instructors.Add(instructor);
+                        instructors.Add(instructor);
                     }
 
                     reader.Close();
@@ -164,9 +165,20 @@ namespace StudentExercises5.Data
         }
 
         /// <summary>Assigns an existing exercise to an existing student</summary>
-        public void AssignExercise(Exercise exercise, Student student)
+        public void AssignExercise(int exerciseId, int studentId)
         {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO StudentExercise (StudentId, ExerciseId) VALUES (@StudentId, @ExerciseId)";
+                    cmd.Parameters.Add(new SqlParameter("@StudentId", studentId));
+                    cmd.Parameters.Add(new SqlParameter("@ExerciseId", exerciseId));
 
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         //public void AddExercise(Exercise exercise)
@@ -178,11 +190,11 @@ namespace StudentExercises5.Data
         //        {
         //            cmd.CommandText = "INSERT INTO Exercise (Name, Language) VALUES (@name, @language)";
         //            cmd.Parameters.Add(new SqlParameter("@name", exercise.Name));
-        //            cmd.Parameters.Add(new SqlParameter("@language", exercise.Language));
+        //            cmd.Parameters.Add(new SqlParameter("@language", exercise.Language)); 
         //            cmd.ExecuteNonQuery();
         //        }
         //    }
         //}
-
+ 
     }
 }
